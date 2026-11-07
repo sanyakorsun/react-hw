@@ -1,0 +1,106 @@
+
+#root {
+  width: 100%;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 34px;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #999;
+  margin-bottom: 35px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 25px;
+}
+
+.card {
+  background: #1c1c1c;
+  border: 1px solid #333;
+  padding: 25px;
+}
+
+.card h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 23px;
+}
+
+.card h3 {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+.card p {
+  color: #ccc;
+  line-height: 1.6;
+}
+
+.card strong {
+  color: white;
+}
+
+.poster {
+  width: 190px;
+  display: block;
+  margin: 0 auto 20px;
+}
+
+.avatar {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.pet-image {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.card ul {
+  padding-left: 20px;
+  color: #ccc;
+  line-height: 1.8;
+}
+
+.clock {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.time {
+  font-size: 48px;
+  font-weight: bold;
+  color: #61dafb;
+  margin: 20px 0;
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+}
