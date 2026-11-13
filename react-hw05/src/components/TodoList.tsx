@@ -1,7 +1,7 @@
-// src/components/TodoList.tsx
 import React from "react";
-import TodoItem from "./TodoItem";
 import type { Todo } from "../types";
+import TodoItem from "./TodoItem";
+import styles from "./TodoList.module.css";
 
 interface TodoListProps {
   todos: Todo[];
@@ -10,8 +10,16 @@ interface TodoListProps {
 }
 
 const TodoList: React.FC<TodoListProps> = ({ todos, onToggle, onDelete }) => {
+  if (todos.length === 0) {
+    return (
+      <p className={styles.emptyMessage}>
+        Список завдань порожній. Додайте перше!
+      </p>
+    );
+  }
+
   return (
-    <div id="todo-list" className="todo-container">
+    <ul className={styles.list}>
       {todos.map((todo) => (
         <TodoItem
           key={todo.id}
@@ -20,7 +28,7 @@ const TodoList: React.FC<TodoListProps> = ({ todos, onToggle, onDelete }) => {
           onDelete={onDelete}
         />
       ))}
-    </div>
+    </ul>
   );
 };
 

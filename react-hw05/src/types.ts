@@ -1,8 +1,10 @@
+export type Priority = "low" | "normal" | "high";
+export type SortOrder = "none" | "asc" | "desc";
+
 export interface Todo {
   id: number;
   text: string;
   completed: boolean;
+  priority: Priority;
+  date?: string;
 }
-
-// Напрямок сортування: без сортування, від А до Я, або від Я до А
-export type SortOrder = "none" | "asc" | "desc";

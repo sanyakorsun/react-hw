@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from "react";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
-import type { Todo, SortOrder } from "./types";
+import type { Todo, SortOrder, Priority } from "./types";
+import styles from "./App.module.css";
 
 const App: React.FC = () => {
   // 1. Стан списку задач з лінивою ініціалізацією із localStorage
@@ -35,8 +36,12 @@ const App: React.FC = () => {
     document.title = `Задач: ${totalCount} | Todo App`;
   }, [totalCount]);
 
-  // 6. Обробники подій
-  const handleAddTodo = (text: string) => {
+  // 6. Обробники подій (оновлено для прийому priority та date)
+  const handleAddTodo = (
+    text: string,
+    priority: Priority = "normal",
+    date?: string,
+  ) => {
     const trimmed = text.trim();
     if (!trimmed) return;
 
@@ -44,6 +49,8 @@ const App: React.FC = () => {
       id: Date.now(),
       text: trimmed,
       completed: false,
+      priority,
+      date,
     };
 
     setTodos((prev) => [...prev, newTodo]);
@@ -69,10 +76,12 @@ const App: React.FC = () => {
   };
 
   return (
-    <main className="todo-app">
-      <header className="app-header">
-        <h1>Todo List</h1>
-        <p className="subtitle">Організуй свої щоденні справи та завдання</p>
+    <main className={styles.todoApp}>
+      <header className={styles.appHeader}>
+        <h1 className={styles.title}>Todo List</h1>
+        <p className={styles.subtitle}>
+          Організуй свої щоденні справи та завдання
+        </p>
       </header>
 
       <TodoForm
@@ -83,11 +92,17 @@ const App: React.FC = () => {
         sortOrder={sortOrder}
       />
 
-      <div className="counter">
-        <span className="counter-label">Всього завдань:</span>
-        <span id="todo-count">
-          {totalCount} {completedCount > 0 && `(виконано: ${completedCount})`}
-        </span>
+      <div className={styles.counter}>
+        <div className={styles.counterBadge}>
+          <span className={styles.counterLabel}>Всього завдань</span>
+          <span className={styles.counterValue}>{totalCount}</span>
+        </div>
+        <div className={styles.counterBadge}>
+          <span className={styles.counterLabel}>Виконано</span>
+          <span className={`${styles.counterValue} ${styles.completedValue}`}>
+            {completedCount}
+          </span>
+        </div>
       </div>
 
       <TodoList

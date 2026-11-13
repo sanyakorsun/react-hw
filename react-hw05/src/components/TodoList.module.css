@@ -1,0 +1,16 @@
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.emptyMessage {
+  text-align: center;
+  padding: 28px 16px;
+  color: #94a3b8;
+  font-size: 0.95rem;
+  background-color: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 12px;
+}

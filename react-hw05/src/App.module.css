@@ -1,0 +1,65 @@
+.todoApp {
+  max-width: 600px;
+  margin: 24px auto;
+  padding: 28px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+}
+
+.appHeader {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+.counter {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.counterBadge {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+
+.counterLabel {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.counterValue {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+.completedValue {
+  color: #10b981;
+}
+
+@media (max-width: 480px) {
+  .todoApp {
+    margin: 10px;
+    padding: 18px;
+  }
+}
