@@ -1,0 +1,176 @@
+import styled from "styled-components";
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid var(--border-light);
+  margin-bottom: 24px;
+`;
+
+const InputGroup = styled.div`
+  width: 100%;
+`;
+
+const Input = styled.input`
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: var(--text-main);
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+`;
+
+const Controls = styled.div`
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+`;
+
+const Group = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1 1 140px;
+`;
+
+const Label = styled.label`
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+`;
+
+const Select = styled.select`
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #1e293b;
+  outline: none;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+`;
+
+const DateInput = styled.input`
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  background-color: #ffffff;
+  color: #1e293b;
+  outline: none;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  }
+`;
+
+const SubmitBtn = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 20px;
+  height: 42px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--primary-hover) 100%
+  );
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+  white-space: nowrap;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(79, 70, 229, 0.35);
+    background: linear-gradient(135deg, var(--primary-hover) 0%, #3730a3 100%);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+`;
+
+const BtnIcon = styled.span`
+  font-size: 1.1rem;
+  line-height: 1;
+`;
+
+export function TaskForm() {
+  return (
+    <Form onSubmit={(e) => e.preventDefault()}>
+      <InputGroup>
+        <Input
+          type="text"
+          placeholder="Що потрібно зробити?"
+          defaultValue=""
+          autoComplete="off"
+        />
+      </InputGroup>
+
+      <Controls>
+        <Group>
+          <Label htmlFor="priority-select">Пріоритет:</Label>
+          <Select id="priority-select" defaultValue="normal">
+            <option value="low">🟢 Низький</option>
+            <option value="normal">🟡 Звичайний</option>
+            <option value="high">🔴 Високий</option>
+          </Select>
+        </Group>
+
+        <Group>
+          <Label htmlFor="deadline-input">Дедлайн:</Label>
+          <DateInput id="deadline-input" type="date" />
+        </Group>
+
+        <SubmitBtn type="submit">
+          <BtnIcon>＋</BtnIcon>
+          <span>Додати</span>
+        </SubmitBtn>
+      </Controls>
+    </Form>
+  );
+}
