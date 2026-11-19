@@ -1,4 +1,6 @@
+import { useState, useRef, useEffect, type FormEvent } from "react";
 import styled from "styled-components";
+import type { Priority } from "../types";
 
 const Form = styled.form`
   display: flex;
@@ -36,6 +38,13 @@ const Input = styled.input`
   &::placeholder {
     color: #94a3b8;
   }
+`;
+
+const ErrorText = styled.span`
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  display: block;
 `;
 
 const Controls = styled.div`
@@ -132,6 +141,13 @@ const SubmitBtn = styled.button`
   &:active {
     transform: translateY(0);
   }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
 `;
 
 const BtnIcon = styled.span`
@@ -139,22 +155,69 @@ const BtnIcon = styled.span`
   line-height: 1;
 `;
 
-export function TaskForm() {
+interface TaskFormProps {
+  onAddTask: (task: { text: string; priority: Priority; date: string }) => void;
+}
+
+export function TaskForm({ onAddTask }: TaskFormProps) {
+  const [text, setText] = useState("");
+  const [priority, setPriority] = useState<Priority>("normal");
+  const [date, setDate] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  const textInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    textInputRef.current?.focus();
+  }, []);
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+
+    if (text.trim().length < 3) {
+      setError("Текст завдання має містити щонайменше 3 символи!");
+      return;
+    }
+
+    onAddTask({
+      text: text.trim(),
+      priority,
+      date,
+    });
+
+    setText("");
+    setPriority("normal");
+    setDate("");
+    setError(null);
+
+    textInputRef.current?.focus();
+  };
+
   return (
-    <Form onSubmit={(e) => e.preventDefault()}>
+    <Form onSubmit={handleSubmit}>
       <InputGroup>
         <Input
+          ref={textInputRef}
           type="text"
           placeholder="Що потрібно зробити?"
-          defaultValue=""
+          value={text}
+          onChange={(e) => {
+            setText(e.target.value);
+            if (error) setError(null);
+          }}
           autoComplete="off"
         />
+        {error && <ErrorText>⚠️ {error}</ErrorText>}
       </InputGroup>
 
       <Controls>
         <Group>
           <Label htmlFor="priority-select">Пріоритет:</Label>
-          <Select id="priority-select" defaultValue="normal">
+          <Select
+            id="priority-select"
+            value={priority}
+            onChange={(e) => setPriority(e.target.value as Priority)}
+          >
             <option value="low">🟢 Низький</option>
             <option value="normal">🟡 Звичайний</option>
             <option value="high">🔴 Високий</option>
@@ -163,10 +226,15 @@ export function TaskForm() {
 
         <Group>
           <Label htmlFor="deadline-input">Дедлайн:</Label>
-          <DateInput id="deadline-input" type="date" />
+          <DateInput
+            id="deadline-input"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
         </Group>
 
-        <SubmitBtn type="submit">
+        <SubmitBtn type="submit" disabled={text.trim().length === 0}>
           <BtnIcon>＋</BtnIcon>
           <span>Додати</span>
         </SubmitBtn>

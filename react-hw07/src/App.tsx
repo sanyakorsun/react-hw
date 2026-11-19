@@ -1,29 +1,31 @@
+import { useState, useEffect, useMemo } from "react";
 import styled, { keyframes } from "styled-components";
 import { Header } from "./components/Header";
-import type { Task } from "./types";
 import { TaskForm } from "./components/TaskForm";
 import { Counter } from "./components/Counter";
 import { TodoList } from "./components/TodoList";
+import type { Task, Priority, FilterStatus } from "./types";
 
-const MOCK_TASKS: Task[] = [
+const STORAGE_KEY = "tasks_pv511";
+
+const INITIAL_TASKS: Task[] = [
   {
     id: 1,
-    text: "Підготувати практичне завдання зі стилізації компонентів",
-    completed: false,
-    priority: "high",
+    text: "Опанувати декомпозицію компонентів у React",
+    completed: true,
+    priority: "normal",
     date: "2026-11-12",
-    isOverdue: true,
   },
   {
     id: 2,
-    text: "Розробити структуру та стилі інтерфейсу списку завдань",
-    completed: true,
-    priority: "normal",
-    date: "2026-11-14",
+    text: "Вивчити роботу з хуками useState, useEffect та useRef",
+    completed: false,
+    priority: "high",
+    date: "2026-11-13",
   },
   {
     id: 3,
-    text: "Налаштувати стилізацію через глобальні CSS-стилі",
+    text: "Створити завершений додаток Task List із збереженням у LocalStorage",
     completed: false,
     priority: "low",
     date: "2026-11-20",
@@ -54,15 +56,86 @@ const AppContainer = styled.main`
 `;
 
 export function App() {
-  const total = MOCK_TASKS.length;
-  const completed = MOCK_TASKS.filter((task) => task.completed).length;
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : INITIAL_TASKS;
+    } catch (e) {
+      console.error("Не вдалося завантажити завдання з LocalStorage:", e);
+      return INITIAL_TASKS;
+    }
+  });
+
+  const [filter, setFilter] = useState<FilterStatus>("all");
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    } catch (e) {
+      console.error("Не вдалося зберегти завдання в LocalStorage:", e);
+    }
+  }, [tasks]);
+
+  const totalCount = tasks.length;
+  const completedCount = tasks.filter((t) => t.completed).length;
+  const activeCount = totalCount - completedCount;
+
+  useEffect(() => {
+    document.title =
+      activeCount > 0
+        ? `(${activeCount}) Завдань залишилось | Task List`
+        : "Всі справи виконано! 🎉 | Task List";
+  }, [activeCount]);
+
+  const handleAddTask = (taskData: {
+    text: string;
+    priority: Priority;
+    date: string;
+  }) => {
+    const newTask: Task = {
+      id: Date.now(),
+      text: taskData.text,
+      priority: taskData.priority,
+      date: taskData.date || undefined,
+      completed: false,
+    };
+
+    setTasks((prev) => [newTask, ...prev]);
+  };
+
+  const handleToggleTask = (id: number | string) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task,
+      ),
+    );
+  };
+
+  const handleDeleteTask = (id: number | string) => {
+    setTasks((prev) => prev.filter((task) => task.id !== id));
+  };
+
+  const displayedTasks = useMemo(() => {
+    if (filter === "active") return tasks.filter((t) => !t.completed);
+    if (filter === "completed") return tasks.filter((t) => t.completed);
+    return tasks;
+  }, [tasks, filter]);
 
   return (
     <AppContainer>
       <Header />
-      <TaskForm />
-      <Counter total={total} completed={completed} />
-      <TodoList tasks={MOCK_TASKS} />
+      <TaskForm onAddTask={handleAddTask} />
+      <Counter
+        total={totalCount}
+        completed={completedCount}
+        currentFilter={filter}
+        onFilterChange={setFilter}
+      />
+      <TodoList
+        tasks={displayedTasks}
+        onToggleTask={handleToggleTask}
+        onDeleteTask={handleDeleteTask}
+      />
     </AppContainer>
   );
 }

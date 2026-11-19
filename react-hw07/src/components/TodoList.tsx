@@ -1,9 +1,11 @@
 import styled from "styled-components";
-import { ToDoItem } from "./TodoItem";
+import { TodoItem } from "./TodoItem";
 import type { Task } from "../types";
 
 interface TodoListProps {
   tasks: Task[];
+  onToggleTask: (id: number | string) => void;
+  onDeleteTask: (id: number | string) => void;
 }
 
 const List = styled.ul`
@@ -41,14 +43,14 @@ const EmptySubtitle = styled.p`
   margin: 0 auto;
 `;
 
-export function TodoList({ tasks }: TodoListProps) {
+export function TodoList({ tasks, onToggleTask, onDeleteTask }: TodoListProps) {
   if (tasks.length === 0) {
     return (
       <EmptyContainer>
         <EmptyIcon>✨</EmptyIcon>
-        <EmptyTitle>Список завдань порожній</EmptyTitle>
+        <EmptyTitle>Завдань не знайдено</EmptyTitle>
         <EmptySubtitle>
-          Додайте нове завдання вище, щоб розпочати свій продуктивний день!
+          У цьому списку поки що немає справ. Додайте нове завдання вище!
         </EmptySubtitle>
       </EmptyContainer>
     );
@@ -57,7 +59,12 @@ export function TodoList({ tasks }: TodoListProps) {
   return (
     <List>
       {tasks.map((task) => (
-        <ToDoItem key={task.id} task={task} />
+        <TodoItem
+          key={task.id}
+          task={task}
+          onToggleTask={onToggleTask}
+          onDeleteTask={onDeleteTask}
+        />
       ))}
     </List>
   );

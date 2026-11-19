@@ -19,9 +19,13 @@ const BADGE_STYLES: Record<Priority, { bg: string; color: string }> = {
   high: { bg: "#fef2f2", color: "#991b1b" },
 };
 
-interface ToDoItemProps {
+interface TodoItemProps {
   task: Task;
+  onToggleTask: (id: number | string) => void;
+  onDeleteTask: (id: number | string) => void;
 }
+
+const TODAY_STRING = new Date().toISOString().slice(0, 10);
 
 const Item = styled.li<{
   $priority: Priority;
@@ -150,8 +154,11 @@ const DeleteBtn = styled.button`
   }
 `;
 
-export function ToDoItem({ task }: ToDoItemProps) {
-  const isOverdue = Boolean(task.isOverdue && !task.completed);
+export function TodoItem({ task, onToggleTask, onDeleteTask }: TodoItemProps) {
+  const isOverdue = Boolean(
+    task.isOverdue ??
+    (!task.completed && task.date && task.date < TODAY_STRING),
+  );
 
   return (
     <Item
@@ -160,9 +167,15 @@ export function ToDoItem({ task }: ToDoItemProps) {
       $overdue={isOverdue}
     >
       <CheckboxLabel
-        title={task.completed ? "Виконано" : "Позначити як виконане"}
+        title={
+          task.completed ? "Позначити як невиконане" : "Позначити як виконане"
+        }
       >
-        <Checkbox type="checkbox" defaultChecked={task.completed} />
+        <Checkbox
+          type="checkbox"
+          checked={task.completed}
+          onChange={() => onToggleTask(task.id)}
+        />
       </CheckboxLabel>
 
       <Content>
@@ -180,7 +193,11 @@ export function ToDoItem({ task }: ToDoItemProps) {
         </Meta>
       </Content>
 
-      <DeleteBtn type="button" title="Видалити завдання">
+      <DeleteBtn
+        type="button"
+        title="Видалити завдання"
+        onClick={() => onDeleteTask(task.id)}
+      >
         🗑️
       </DeleteBtn>
     </Item>
